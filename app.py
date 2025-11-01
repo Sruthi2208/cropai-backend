@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import numpy as np
-from googletrans import Translator
+from deep_translator import GoogleTranslator  # ✅ replaced googletrans with deep-translator
 
 # Load saved model and encoder
 model = joblib.load("artifacts/model.joblib")
@@ -20,7 +20,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-translator = Translator()
+# Translator instance
+def translate_text(text: str, target_lang: str):
+    try:
+        if target_lang != "en":
+            translated = GoogleTranslator(source='auto', target=target_lang).translate(text)
+            return translated
+    except Exception:
+        return text
+    return text
 
 # Input format
 class CropInput(BaseModel):
@@ -71,9 +79,7 @@ def predict_crop(data: CropInput):
     reason = reason_for_crop(crop, data.temperature, data.humidity, data.rainfall)
 
     output_text = f"Recommended Crop: {crop}\nReason: {reason}\nFertilizers: {', '.join(fertilizers)}"
-    if data.language != "en":
-        translated = translator.translate(output_text, dest=data.language)
-        output_text = translated.text
+    output_text = translate_text(output_text, data.language)  # ✅ uses deep-translator safely
 
     return {
         "crop": crop,
