@@ -10,9 +10,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Artifacts or models (optional)
-artifacts/
-
 # Logs
 *.log
 
