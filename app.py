@@ -17,7 +17,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",  # Local React app
-        "https://cropai-frontend.onrender.com",  # Render frontend (replace with your frontend URL if different)
+        "https://cropai-frontend.onrender.com",
+        "https://cropai-backend-7.onrender.com/",  # Render frontend (replace with your frontend URL if different)
         "*",  # Allows all origins (safe for testing)
     ],
     allow_credentials=True,
